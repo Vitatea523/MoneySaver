@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elec5619.g20.dao.CouponMapper">
+    <resultMap id="couponResultMap" type="com.elec5619.g20.pojo.Coupon">
+        <id property="couponId" column="coupon_id"/>
+        <result property="title" column="title"/>
+        <result property="code" column="code"/>
+        <result property="store" column="store"/>
+        <result property="link" column="link"/>
+        <result property="productCategory" column="product_category"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="description" column="description"/>
+        <result property="picture" column="picture"/>
+    </resultMap>
+
+    <insert id="insertCoupon" parameterType="com.elec5619.g20.pojo.Coupon" useGeneratedKeys="true" keyProperty="couponId">
+        INSERT INTO Coupon (title, code, store, link, product_category, start_date, end_date, description,picture)
+        VALUES
+        <foreach collection="list" item="coupon" separator=",">
+            (#{coupon.title},#{coupon.code},#{coupon.store},#{coupon.link},#{coupon.productCategory},
+             #{coupon.startDate},#{coupon.endDate},#{coupon.description},#{coupon.picture})
+        </foreach>
+    </insert>
+
+    <select id="selectByPrimaryKey">
+        SELECT * FROM Coupon
+        WHERE coupon_id = #{couponId};
+    </select>
+    <!--Customers should be able to use the filter function to find coupons within the target range.-->
+    <select id="selectCouponByStore" resultMap="couponResultMap">
+        SELECT * FROM Coupon
+        WHERE store = #{store};
+    </select>
+
+    <!-- find all stores in this system-->
+    <select id="selectAllStore" resultType="java.lang.String">
+        SELECT DISTINCT store FROM Coupon;
+    </select>
+
+    <delete id="deleteCouponById">
+        DELETE FROM Coupon WHERE coupon_id = #{couponId};
+    </delete>
+
+    <!--find all coupons in this system-->
+    <select id="listAllCoupon" resultMap="couponResultMap">
+        SELECT * FROM Coupon;
+    </select>
+
+    <select id="queryCouponById" resultMap="couponResultMap">
+        SELECT * FROM Coupon WHERE coupon_id = #{categoryId};
+    </select>
+
+    <delete id="deleteAllCoupon">
+        DELETE FROM Coupon;
+    </delete>
+
+    <delete id="deleteByCouponTitle">
+        DELETE FROM Coupon
+        WHERE title = #{title};
+    </delete>
+
+    <select id="findCouponByTitle" resultType="com.elec5619.g20.pojo.Coupon">
+        SELECT * FROM Coupon WHERE title = #{title};
+    </select>
+</mapper>

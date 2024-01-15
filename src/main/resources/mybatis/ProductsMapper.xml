@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elec5619.g20.dao.ProductsMapper">
+    <resultMap id="BaseResultMap" type="com.elec5619.g20.pojo.Products">
+        <id column="product_id" property="productId"/>
+        <result column="brand" property="brand"/>
+        <result column="product_name" property="productName"/>
+        <result column="category" property="category"/>
+        <result column="orginal_price" property="orginalPrice"/>
+        <result column="current_price" property="currentPrice"/>
+        <result column="picture" property="picture"/>
+        <result column="description" property="description"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+
+            product_id, brand, product_name, category, orginal_price, current_price,
+            picture, description
+
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+
+            select
+
+        <include refid="Base_Column_List"/>
+
+            from products
+            where product_id = #{productId,jdbcType=INTEGER}
+
+    </select>
+    <insert id="insert" keyColumn="product_id" keyProperty="productId" parameterType="com.elec5619.g20.pojo.Products"
+            useGeneratedKeys="true">
+
+            insert into products (brand, product_name, category,
+              orginal_price, current_price,
+              picture,description)
+            values
+        <foreach collection="list" item="product" separator=",">
+            (#{product.brand}, #{product.productName}, #{product.category},
+            #{product.orginalPrice}, #{product.currentPrice},
+            #{product.picture},#{product.description})
+        </foreach>
+
+
+    </insert>
+
+    <select id="selectByCategory" resultType="com.elec5619.g20.pojo.Products">
+
+            select
+
+        <include refid="Base_Column_List"/>
+
+            from products
+            WHERE category = #{category};
+
+    </select>
+
+    <delete id="delete">
+
+            DELETE FROM products
+
+    </delete>
+
+    <select id="selectByBrand" resultMap="BaseResultMap">
+
+            select
+
+        <include refid="Base_Column_List"/>
+
+            from products
+            where brand=#{brand,jdbcType=VARCHAR}
+
+    </select>
+
+    <select id="selectAllOrderByDiscount" resultMap="BaseResultMap">
+
+            select
+
+        <include refid="Base_Column_List"/>
+
+            from products order by current_price/orginal_price asc
+
+    </select>
+
+    <select id="selectBrand" resultType="java.lang.String">
+
+
+              select DISTINCT  brand
+                from products
+
+
+    </select>
+</mapper>

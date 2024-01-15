@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elec5619.g20.dao.UserMapper">
+    <resultMap id="userResultMap" type="com.elec5619.g20.pojo.User">
+        <id property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="eMail" column="e-mail"/>
+        <result property="address" column="address"/>
+    </resultMap>
+
+    <insert id="register" parameterType="com.elec5619.g20.pojo.User" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO User (username, password, `e-mail`, address)
+        VALUES (#{username}, #{password}, #{eMail}, #{address});
+    </insert>
+
+    <update id="updateUser">
+        UPDATE User
+        <set>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="eMail != null and eMail != ''">
+                `e-mail` = #{eMail},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address}
+            </if>
+        </set>
+        WHERE user_id = #{userId};
+    </update>
+
+    <delete id="deleteByUsername">
+        DELETE FROM User
+        WHERE username = #{name};
+    </delete>
+
+    <select id="findUserByName" resultType="com.elec5619.g20.pojo.User">
+        SELECT username, password FROM User WHERE username = #{username};
+    </select>
+
+    <select id="login" resultType="com.elec5619.g20.pojo.User">
+        SELECT user_id, username, password, `e-mail`as eMail, address FROM User WHERE username = #{username} AND password = #{password};
+    </select>
+
+    <select id="selectUserById" resultType="com.elec5619.g20.pojo.User">
+        SELECT user_id, username, password, `e-mail` as eMail, address FROM User WHERE user_id = #{id};
+    </select>
+
+
+</mapper>
